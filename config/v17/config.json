@@ -1,0 +1,22 @@
+{
+    "hooks": [
+        "actionAfterCreateCategoryFormHandler",
+        "actionAfterUpdateCategoryFormHandler",
+        "actionCategoryFormBuilderModifier",
+
+        "backOfficeHeader",
+        "filterCategoryContent"
+    ],
+
+    "tabs": [
+
+    ],
+
+    "models": [
+
+    ],
+
+    "fields": [
+
+    ]
+}
