@@ -5,7 +5,7 @@
     {% if widget is defined and widget == 'mdgImageCategory' %}
         {% if image_url is defined and image_url %}
             <figure class="figure">
-                <img class="figure-img img-fluid img-thumbnail" src="{{ asset(image_url) }}"/>
+                <img class="figure-img img-fluid img-thumbnail" src="{{ asset(image_url) }}{{ "now"|date("Ymdhis") }}"/>
                 <figcaption class="figure-caption">
                     <button
                         class="btn btn-outline-danger btn-sm js-form-submit-btn"
@@ -19,7 +19,8 @@
             </figure>
         {% endif %}
 
-        {{ parent() }}
     {% endif %}
+
+    {{ parent() }}
 
 {%- endblock %}

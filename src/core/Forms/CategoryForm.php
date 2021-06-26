@@ -9,7 +9,7 @@
 
 namespace mdg\categoryimage\core\Forms;
 
-use mdg\categoryimage\Forms\Types\ImageCategoryType;
+use mdg\categoryimage\Forms\Types\MdgImageCategoryType;
 use mdg\categoryimage\Models\CategoryModel;
 
 class CategoryForm extends \mdg\categoryimage\Forms\ObjectForm
@@ -39,7 +39,7 @@ class CategoryForm extends \mdg\categoryimage\Forms\ObjectForm
         for ($i = 1; $i <= \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'); $i++) {
             $params['form_builder']
                 ->add(
-                    "image-{$i}", ImageCategoryType::class,
+                    "image-{$i}", MdgImageCategoryType::class,
                     [
                         'label' => "Image {$i}",
                         'required' => false,
