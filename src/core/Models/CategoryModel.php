@@ -17,13 +17,13 @@ if (!defined('_CAN_LOAD_FILES_')) {
 class CategoryModel extends \mdg\categoryimage\Models\ObjectModel
 {
     /** @var string dossier contenant les images dans _PS_IMG_DIR_ */
-    public const _IMG_DIR_ = "mdgcatgoreyimage/";
+    public const _IMG_DIR_ = "mdgcatgoryimage/";
 
-    /** @var string|null largeur de l'image en px */
-    public const _IMG_WIDTH_ = "805";
+    /** @var float|null largeur de l'image en px */
+    public const _IMG_WIDTH_ = 805;
 
-    /** @var string|null hauteur de l'image en px */
-    public const _IMG_HEIGHT_ = null;
+    /** @var float|null hauteur de l'image en px */
+    public const _IMG_HEIGHT_ = 600;
 
     /** @var string Type de l'image */
     public const _IMG_TYPE_ = 'png';

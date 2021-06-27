@@ -22,7 +22,7 @@ class mdgcategoryimage extends \Module
     {
         $this->name = 'mdgcategoryimage';
         $this->tab = 'front_office_features';
-        $this->version = '1.0.0';
+        $this->version = '1.0.1';
         $this->author = 'Michel Dumont';
         $this->need_instance = 0;
         $this->bootstrap = 1;

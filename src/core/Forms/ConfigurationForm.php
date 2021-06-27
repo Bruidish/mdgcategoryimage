@@ -46,10 +46,10 @@ class ConfigurationForm extends \mdg\categoryimage\Forms\ObjectForm
                 ],
                 'input' => [
                     [
-                        'type' => 'text',
-                        'label' => $this->module->l('Number of additional images', $this->form_name),
+                        'type' => 'textarea',
+                        'label' => $this->module->l('Names of additional images', $this->form_name),
                         'name' => 'MDG_CATEGORYIMAGE_NB_IMAGES',
-                        'class' => 'fixed-width-xs',
+                        'desc' => $this->module->l('One image name by line', $this->form_name),
                     ],
                 ],
                 'submit' => [
@@ -104,6 +104,7 @@ class ConfigurationForm extends \mdg\categoryimage\Forms\ObjectForm
         // Enregistrement des données
         foreach ($formData as $key => $value) {
             if (preg_match('/^MDG_/', $key)) {
+                $value = trim($value, "\r\n");
                 $output &= \Configuration::updateValue($key, $value);
             }
         }

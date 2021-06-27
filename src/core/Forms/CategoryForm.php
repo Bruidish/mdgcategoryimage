@@ -36,14 +36,15 @@ class CategoryForm extends \mdg\categoryimage\Forms\ObjectForm
     {
         $this->dirExists(_PS_IMG_DIR_ . $this->object::_IMG_DIR_);
 
-        for ($i = 1; $i <= \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'); $i++) {
+        $images = explode("\r\n", \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'));
+        foreach ($images as $index => $imageName) {
             $params['form_builder']
                 ->add(
-                    "image-{$i}", MdgImageCategoryType::class,
+                    "image-{$index}", MdgImageCategoryType::class,
                     [
-                        'label' => "Image {$i}",
+                        'label' => $imageName,
                         'required' => false,
-                        'image_url' => $this->object::getImageUrlBySuffix($this->object->id, $i),
+                        'image_url' => $this->object::getImageUrlBySuffix($this->object->id, $index),
                     ]
                 );
         }
@@ -71,8 +72,12 @@ class CategoryForm extends \mdg\categoryimage\Forms\ObjectForm
     {
         $output = true;
 
-        for ($i = 1; $i <= \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'); $i++) {
-            $output &= $this->uploadImage($this->object->id, $i, "image-{$i}", $this->object::_IMG_DIR_, $this->object::_IMG_WIDTH_, $this->object::_IMG_HEIGHT_, $this->object::_IMG_TYPE_);
+        $images = explode("\r\n", \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'));
+        $psImageGenerationMethod = \Configuration::get('PS_IMAGE_GENERATION_METHOD');
+        $width = $psImageGenerationMethod == 2 ? null : $this->object::_IMG_WIDTH_;
+        $height = $psImageGenerationMethod == 1 ? null : $this->object::_IMG_HEIGHT_;
+        foreach ($images as $index => $imageName) {
+            $output &= $this->uploadImage($this->object->id, $index, "image-{$index}", $this->object::_IMG_DIR_, $width, $height, $this->object::_IMG_TYPE_);
         }
 
         return $output;
@@ -150,7 +155,7 @@ class CategoryForm extends \mdg\categoryimage\Forms\ObjectForm
                 $this->errors[] = 'Due to memory limit restrictions, this image cannot be loaded. Please increase your memory_limit value via your server\'s configuration settings.';
             }
 
-            if (empty($this->errors) && !\ImageManager::resize($tmpName, _PS_IMG_DIR_ . "{$imgDir}{$id}-{$suffix}.{$imgType}", (int) $width, (int) $height, $imgType)) {
+            if (empty($this->errors) && !\ImageManager::resize($tmpName, _PS_IMG_DIR_ . "{$imgDir}{$id}-{$suffix}.{$imgType}", $width, $height, $imgType)) {
                 $this->errors[] = 'An error occurred while uploading the image.' . _PS_TMP_IMG_DIR_ . $tmpName;
             }
 

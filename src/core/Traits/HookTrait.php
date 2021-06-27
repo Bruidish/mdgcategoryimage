@@ -22,8 +22,9 @@ trait HookTrait
     {
         if (isset($params['object'])) {
             $params['object']['mdgCategoryImage'] = [];
-            for ($i = 1; $i <= \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'); $i++) {
-                $params['object']['mdgCategoryImage'][] = CategoryModel::getImageUrlBySuffix($params['object']['id'], $i);
+            $images = explode("\r\n", \Configuration::get('MDG_CATEGORYIMAGE_NB_IMAGES'));
+            foreach ($images as $index => $imageName) {
+                $params['object']['mdgCategoryImage'][] = CategoryModel::getImageUrlBySuffix($params['object']['id'], $index);
             }
         }
 
