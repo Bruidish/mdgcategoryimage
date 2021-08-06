@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Michel Dumont <https://michel.dumont.io>
- * @version 1.0.8 [2021-06-22] [Michel Dumont]
+ * @version 1.0.9 [2021-07-07] [Michel Dumont]
  * @copyright 2020
  * @license http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  * @package prestashop 1.6 - 1.7
@@ -33,6 +33,7 @@ class InstallerController
     #region outils public d'installation
     /**
      * Installe un ObjectModel
+     *
      * @param string|object
      * @return boolean
      */
@@ -180,10 +181,12 @@ class InstallerController
     }
 
     /**
-     * Créait un fihier d'index des objets module/src/core/*
+     * Créait un fichier d'index des objets module/src/core/*
      * pour que les logiciels de dev pocèdent les allias générés par l'autoload
+     *
      * @see ../../../vendor/autoload.php
      * @since 2020-11-20
+     * @version [2021-07-07] [Michel Dumont]
      *
      * @return boolean
      */
@@ -191,21 +194,20 @@ class InstallerController
     {
         $path = __DIR__;
         $moduleNameSpace = "mdg\\categoryimage";
-        $classesIndexContent = '';
+        $classesIndexContent = 'namespace { class Module extends \ModuleCore{} ';
 
         $dirs = ['Controllers', 'Forms', 'Models'];
         foreach ($dirs as $dirName) {
-            $files = glob("{$path}/../{$dirName}/*.php");
+            $files = glob("{$path}/../{$dirName}/*[!index].php");
             if (count($files)) {
-                $classesIndexContent .= "namespace {$moduleNameSpace}\\{$dirName};\n";
+                $classesIndexContent .= "}\r\nnamespace {$moduleNameSpace}\\{$dirName} {\r\n";
                 foreach ($files as $file) {
                     $file = basename($file, '.php');
-                    if ($file != 'index') {
-                        $classesIndexContent .= "class {$file} extends \\{$moduleNameSpace}\\core\\{$dirName}\\{$file}{}\n";
-                    }
+                    $classesIndexContent .= "class {$file} extends \\{$moduleNameSpace}\\core\\{$dirName}\\{$file}{}\n";
                 }
             }
         }
+        $classesIndexContent .= '}';
 
         if ($classesIndexContent != '') {
             $handler = fopen("{$path}/../../../vendor/classes_index.php", "w");
@@ -220,6 +222,7 @@ class InstallerController
     #region Installation du module
     /**
      * Lance l'installation du module
+     *
      * @return boolean
      */
     public function install()
@@ -272,6 +275,7 @@ class InstallerController
 
     /**
      * Installe les hooks que va utiliser le module
+     *
      * @return boolean
      */
     private function installHooks()
@@ -286,6 +290,7 @@ class InstallerController
 
     /**
      * Installe les onglets que va utiliser le module
+     *
      * @return boolean
      */
     private function installTabs()
@@ -315,6 +320,7 @@ class InstallerController
 
     /**
      * Installe les ObjectModels du module
+     *
      * @return boolean
      */
     private function installModels()
@@ -329,6 +335,7 @@ class InstallerController
 
     /**
      * Ajoute des colonnes aux tables de la base de données
+     *
      * @return boolean
      */
     private function installFields()
@@ -358,6 +365,7 @@ class InstallerController
 
     /**
      * Initialise les valeurs dans la table configuration de PrestaShop
+     *
      * @return bool
      */
     protected function installConfigurations()
@@ -385,6 +393,7 @@ class InstallerController
 
     /**
      * Déinstalle le module
+     *
      * @return boolean
      */
     public function uninstall()
@@ -411,6 +420,7 @@ class InstallerController
 
     /**
      * Désinstalle les models du module
+     *
      * @return boolean
      */
     private function uninstallModels()
@@ -435,6 +445,7 @@ class InstallerController
 
     /**
      * Désinstalle les tabs du module
+     *
      * @return boolean
      */
     private function uninstallTabs()
@@ -443,7 +454,7 @@ class InstallerController
         foreach ($this->config->tabs as $params) {
             if ($idTab = (int) \Tab::getIdFromClassName($params->class_name)) {
                 /**
-                 * Plusieurs modules WebXY peuvent utiliser le même onglet
+                 * Plusieurs modules MDG peuvent utiliser le même onglet
                  * On ne le retire que si aucun autre module ne l'utilise
                  */
                 if (!$params->removeOnUninstall || !$this->tabIsUsed($idTab)) {
@@ -459,6 +470,7 @@ class InstallerController
 
     /**
      * Indique si l'onglet est utilisé par d'autre modules que celui qu'on est en train de désinstaller
+     *
      * @param int id de l'onglet à vérifier
      * @return bool
      */
@@ -478,6 +490,7 @@ class InstallerController
 
     /**
      * Suppression des valeurs de configuration PrestaShop initialisées par le module
+     *
      * @return bool
      */
     protected function uninstallConfigurations()
